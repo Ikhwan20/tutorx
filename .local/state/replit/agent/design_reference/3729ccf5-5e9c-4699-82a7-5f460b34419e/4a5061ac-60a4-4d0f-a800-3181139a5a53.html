@@ -1,0 +1,558 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TutorX - Gamified Learning for Malaysian Additional Mathematics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366F1',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                        success: '#22C55E',
+                        danger: '#EF4444'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="font-inter bg-gray-50 min-h-screen">
+    
+    <!-- @COMPONENT: Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-primary text-white rounded-lg p-2">
+                        <i class="fas fa-graduation-cap text-xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-900">TutorX</h1>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-primary font-medium">Dashboard</a>
+                    <a href="#" class="text-gray-600 hover:text-primary transition-colors">Topics</a>
+                    <a href="#" class="text-gray-600 hover:text-primary transition-colors">Progress</a>
+                    <a href="#" class="text-gray-600 hover:text-primary transition-colors">Achievements</a>
+                </div>
+                
+                <!-- User Profile & Points -->
+                <div class="flex items-center space-x-4">
+                    <div class="hidden sm:flex items-center space-x-2 bg-accent/10 px-3 py-1 rounded-full">
+                        <i class="fas fa-coins text-accent"></i>
+                        <span class="font-semibold text-accent" data-bind="user.points">1,250</span>
+                    </div>
+                    <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                        <span class="text-white font-medium text-sm" data-bind="user.initials">AS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div class="md:hidden bg-white border-t border-gray-200">
+            <div class="grid grid-cols-4 py-2">
+                <a href="#" class="flex flex-col items-center py-2 text-primary">
+                    <i class="fas fa-home text-lg"></i>
+                    <span class="text-xs mt-1">Home</span>
+                </a>
+                <a href="#" class="flex flex-col items-center py-2 text-gray-500">
+                    <i class="fas fa-book text-lg"></i>
+                    <span class="text-xs mt-1">Topics</span>
+                </a>
+                <a href="#" class="flex flex-col items-center py-2 text-gray-500">
+                    <i class="fas fa-chart-line text-lg"></i>
+                    <span class="text-xs mt-1">Progress</span>
+                </a>
+                <a href="#" class="flex flex-col items-center py-2 text-gray-500">
+                    <i class="fas fa-trophy text-lg"></i>
+                    <span class="text-xs mt-1">Awards</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: Navigation -->
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
+        <!-- @COMPONENT: WelcomeHeader -->
+        <div class="mb-8">
+            <div class="bg-gradient-to-r from-primary to-indigo-600 rounded-2xl p-6 text-white">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2" data-bind="greeting">Good morning, Ahmad!</h2>
+                        <p class="text-indigo-100 mb-4 sm:mb-0">Ready to level up your Additional Mathematics skills today?</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold" data-bind="user.level">Level 12</div>
+                            <div class="text-sm text-indigo-200">Current Level</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold" data-bind="user.streak">7</div>
+                            <div class="text-sm text-indigo-200">Day Streak</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="mt-4">
+                    <div class="flex justify-between text-sm text-indigo-200 mb-2">
+                        <span>Progress to Level 13</span>
+                        <span data-bind="levelProgress">780/1000 XP</span>
+                    </div>
+                    <div class="w-full bg-indigo-400 rounded-full h-3">
+                        <div class="bg-white rounded-full h-3 transition-all duration-500" style="width: 78%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: WelcomeHeader -->
+        
+        <!-- @COMPONENT: QuickStats -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Topics Completed</p>
+                        <p class="text-2xl font-bold text-gray-900" data-bind="stats.completedTopics">12/20</p>
+                    </div>
+                    <div class="bg-secondary/10 p-3 rounded-lg">
+                        <i class="fas fa-check-circle text-secondary text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Quiz Average</p>
+                        <p class="text-2xl font-bold text-gray-900" data-bind="stats.quizAverage">87%</p>
+                    </div>
+                    <div class="bg-accent/10 p-3 rounded-lg">
+                        <i class="fas fa-star text-accent text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Study Time</p>
+                        <p class="text-2xl font-bold text-gray-900" data-bind="stats.studyTime">2h 45m</p>
+                    </div>
+                    <div class="bg-primary/10 p-3 rounded-lg">
+                        <i class="fas fa-clock text-primary text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Achievements</p>
+                        <p class="text-2xl font-bold text-gray-900" data-bind="stats.achievements">8</p>
+                    </div>
+                    <div class="bg-amber-500/10 p-3 rounded-lg">
+                        <i class="fas fa-trophy text-amber-500 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: QuickStats -->
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            
+            <!-- Main Content Area -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- @COMPONENT: ContinueLearning -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold text-gray-900">Continue Learning</h3>
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">In Progress</span>
+                        </div>
+                        
+                        <!-- Featured Video Lesson -->
+                        <div class="bg-gray-100 rounded-xl overflow-hidden mb-4">
+                            <!-- Placeholder for video player showcasing quadratic functions lesson -->
+                            <div class="aspect-video bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center relative">
+                                <div class="text-center">
+                                    <div class="bg-white rounded-full p-4 mb-3 inline-block shadow-lg">
+                                        <i class="fas fa-play text-primary text-2xl"></i>
+                                    </div>
+                                    <p class="text-gray-700 font-medium">Quadratic Functions - Vertex Form</p>
+                                    <p class="text-gray-500 text-sm">5:32 minutes</p>
+                                </div>
+                                <div class="absolute top-4 right-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
+                                    Chapter 2.3
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-semibold text-gray-900">Quadratic Functions</h4>
+                                <p class="text-gray-600 text-sm">Understanding vertex form transformations</p>
+                            </div>
+                            <button class="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors" data-event="click:continueLesson">
+                                Continue
+                            </button>
+                        </div>
+                        
+                        <!-- Progress indicator -->
+                        <div class="mt-4">
+                            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                <span>Progress</span>
+                                <span>3/5 lessons completed</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary rounded-full h-2 transition-all duration-500" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: ContinueLearning -->
+                
+                <!-- @COMPONENT: TopicGrid -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-gray-900">Form 4 Additional Mathematics Topics</h3>
+                        <button class="text-primary hover:text-primary/80 transition-colors text-sm font-medium">
+                            View All Topics
+                        </button>
+                    </div>
+                    
+                    <!-- @MAP: topics.map(topic => ( -->
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        
+                        <div class="border border-gray-200 rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all duration-200 cursor-pointer" data-event="click:openTopic" data-topic-id="functions">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="bg-blue-100 p-2 rounded-lg">
+                                    <i class="fas fa-function text-blue-600"></i>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i class="fas fa-star text-accent text-sm"></i>
+                                    <span class="text-sm text-gray-600">4.8</span>
+                                </div>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Functions and Graphs</h4>
+                            <p class="text-gray-600 text-sm mb-3">Master function notation, domain, range and graph transformations</p>
+                            
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded-full">8 lessons</span>
+                                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">2h 30m</span>
+                                </div>
+                                <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-sm"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all duration-200 cursor-pointer" data-event="click:openTopic" data-topic-id="quadratic">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="bg-primary/10 p-2 rounded-lg">
+                                    <i class="fas fa-wave-square text-primary"></i>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i class="fas fa-star text-accent text-sm"></i>
+                                    <span class="text-sm text-gray-600">4.9</span>
+                                </div>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Quadratic Functions</h4>
+                            <p class="text-gray-600 text-sm mb-3">Explore parabolas, vertex form, and solving quadratic equations</p>
+                            
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-xs bg-accent/10 text-accent px-2 py-1 rounded-full">6 lessons</span>
+                                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">1h 45m</span>
+                                </div>
+                                <div class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center relative">
+                                    <div class="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all duration-200 cursor-pointer" data-event="click:openTopic" data-topic-id="logarithmic">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="bg-purple-100 p-2 rounded-lg">
+                                    <i class="fas fa-chart-line text-purple-600"></i>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i class="fas fa-star text-accent text-sm"></i>
+                                    <span class="text-sm text-gray-600">4.7</span>
+                                </div>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Logarithmic Functions</h4>
+                            <p class="text-gray-600 text-sm mb-3">Understanding logs, exponential growth and natural logarithms</p>
+                            
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-full">5 lessons</span>
+                                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">1h 20m</span>
+                                </div>
+                                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-lock text-gray-400 text-sm"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all duration-200 cursor-pointer" data-event="click:openTopic" data-topic-id="coordinate">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="bg-green-100 p-2 rounded-lg">
+                                    <i class="fas fa-vector-square text-green-600"></i>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i class="fas fa-star text-accent text-sm"></i>
+                                    <span class="text-sm text-gray-600">4.6</span>
+                                </div>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Coordinate Geometry</h4>
+                            <p class="text-gray-600 text-sm mb-3">Lines, circles, and geometric transformations in 2D space</p>
+                            
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">7 lessons</span>
+                                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">2h 10m</span>
+                                </div>
+                                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-lock text-gray-400 text-sm"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!-- @END_MAP )) -->
+                </div>
+                <!-- @END_COMPONENT: TopicGrid -->
+                
+                <!-- @COMPONENT: QuickQuiz -->
+                <div class="bg-gradient-to-r from-accent to-orange-400 rounded-2xl p-6 text-white">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Quick Quiz Challenge</h3>
+                            <p class="text-orange-100 mb-4 sm:mb-0">Test your knowledge with 5 quick questions and earn bonus points!</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="text-center">
+                                <div class="text-lg font-bold">+50</div>
+                                <div class="text-xs text-orange-200">Bonus XP</div>
+                            </div>
+                            <button class="bg-white text-accent px-6 py-2 rounded-lg font-medium hover:bg-orange-50 transition-colors" data-event="click:startQuickQuiz">
+                                Start Quiz
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: QuickQuiz -->
+                
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                
+                <!-- @COMPONENT: AchievementShowcase -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Recent Achievements</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3 p-3 bg-accent/10 rounded-lg">
+                            <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center">
+                                <i class="fas fa-fire text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Week Warrior</p>
+                                <p class="text-sm text-gray-600">7-day study streak achieved!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3 p-3 bg-secondary/10 rounded-lg">
+                            <div class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center">
+                                <i class="fas fa-graduation-cap text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Quiz Master</p>
+                                <p class="text-sm text-gray-600">Scored 90%+ on 5 quizzes</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3 p-3 bg-purple-100 rounded-lg">
+                            <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-clock text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Speed Learner</p>
+                                <p class="text-sm text-gray-600">Completed 3 lessons in 1 hour</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full mt-4 text-primary hover:text-primary/80 transition-colors text-sm font-medium">
+                        View All Achievements
+                    </button>
+                </div>
+                <!-- @END_COMPONENT: AchievementShowcase -->
+                
+                <!-- @COMPONENT: StudyPlan -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Today's Study Plan</h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3 p-3 bg-secondary/10 rounded-lg">
+                            <div class="w-6 h-6 bg-secondary rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900 text-sm">Complete Quadratic Functions</p>
+                                <p class="text-xs text-gray-600">Video + Quiz</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                                <span class="text-white text-xs font-bold">2</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900 text-sm">Review Functions Domain</p>
+                                <p class="text-xs text-gray-600">Practice Problems</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
+                                <span class="text-white text-xs font-bold">3</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900 text-sm">Take Weekly Quiz</p>
+                                <p class="text-xs text-gray-600">15 minutes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: StudyPlan -->
+                
+                <!-- @COMPONENT: Leaderboard -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Class Leaderboard</h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold text-sm">1</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900">Sarah Chen</p>
+                                <p class="text-sm text-gray-600">2,450 XP</p>
+                            </div>
+                            <i class="fas fa-crown text-accent"></i>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold text-sm">2</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900">You</p>
+                                <p class="text-sm text-gray-600">1,250 XP</p>
+                            </div>
+                            <i class="fas fa-arrow-up text-secondary"></i>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold text-sm">3</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900">Ali Rahman</p>
+                                <p class="text-sm text-gray-600">1,180 XP</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                                <span class="text-gray-600 font-bold text-sm">4</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900">Mei Ling</p>
+                                <p class="text-sm text-gray-600">980 XP</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full mt-4 text-primary hover:text-primary/80 transition-colors text-sm font-medium">
+                        View Full Leaderboard
+                    </button>
+                </div>
+                <!-- @END_COMPONENT: Leaderboard -->
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- @COMPONENT: FloatingActionButton -->
+    <div class="fixed bottom-6 right-6 z-40">
+        <button class="bg-primary text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 flex items-center justify-center" data-event="click:quickHelp">
+            <i class="fas fa-question text-xl"></i>
+        </button>
+    </div>
+    <!-- @END_COMPONENT: FloatingActionButton -->
+
+    <script>
+        // TODO: Implement business logic, API calls, and state management
+        (function() {
+            'use strict';
+            
+            // Simulated user interactions for demo purposes
+            function initializeInteractivity() {
+                // Progress animation on page load
+                setTimeout(() => {
+                    const progressBars = document.querySelectorAll('[style*="width:"]');
+                    progressBars.forEach(bar => {
+                        bar.style.transition = 'width 1s ease-in-out';
+                    });
+                }, 500);
+                
+                // Achievement unlock animation
+                function showAchievementUnlock() {
+                    // TODO: Implement achievement unlock notification
+                    console.log('Achievement unlocked!');
+                }
+                
+                // Quiz result celebration
+                function celebrateQuizCompletion(score) {
+                    // TODO: Implement confetti animation for high scores
+                    if (score >= 80) {
+                        console.log('Great job! Confetti animation would trigger here');
+                    }
+                }
+                
+                // Streak counter update
+                function updateStreakCounter() {
+                    // TODO: Implement streak counter with local storage
+                    console.log('Updating study streak...');
+                }
+                
+                // Level up animation
+                function triggerLevelUp() {
+                    // TODO: Implement level up celebration
+                    console.log('Level up animation would trigger here');
+                }
+            }
+            
+            initializeInteractivity();
+        })();
+    </script>
+</body>
+</html>
